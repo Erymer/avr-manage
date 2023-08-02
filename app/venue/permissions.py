@@ -10,22 +10,23 @@ from rest_framework.permissions import BasePermission
 # - 'admin'
 # - 'finance'
 
-class VenueCreatePermissions(BasePermission):
+class VenuePermissions(BasePermission):
     def has_permission(self, request, view):
-        allowed_roles = ['sales']
-        return request.user.is_authenticated and request.user.role in allowed_roles
+        if request.method in ['GET']:
+            return request.user.is_authenticated
 
-class VenueReadPermissions(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated
+        elif request.method in ['POST']:
+            allowed_roles = ['sales']
+            return request.user.is_authenticated and request.user.role in allowed_roles
 
-class VenueUpdatePermissions(BasePermission):
-    def has_permission(self, request, view):
-        allowed_roles = ['sales']
-        return request.user.is_authenticated and request.user.role in allowed_roles
+        elif request.method in ['PUT']:
+            allowed_roles = ['sales']
+            return request.user.is_authenticated and request.user.role in allowed_roles
 
-class VenueDeletePermissions(BasePermission):
-    def has_permission(self, request, view):
-        allowed_roles = ['sales']
-        return request.user.is_authenticated and request.user.role in allowed_roles
+        elif request.method in ['PATCH']:
+            allowed_roles = ['sales']
+            return request.user.is_authenticated and request.user.role in allowed_roles
 
+        elif request.method in ['DELETE']:
+            allowed_roles = ['sales']
+            return request.user.is_authenticated and request.user.role in allowed_roles
