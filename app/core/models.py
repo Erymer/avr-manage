@@ -97,11 +97,6 @@ class Venue(models.Model):
     address = models.CharField(max_length=255, null=False)
     city = models.CharField(max_length=255, null=False)
     state = models.CharField(max_length=255, null=False)
-    # user = models.ForeignKey(
-    #     settings.AUTH_USER_MODEL,
-    #     on_delete=models.CASCADE,
-    # )
-
     def __str__(self):
         return self.name
 

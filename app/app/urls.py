@@ -14,6 +14,7 @@ urlpatterns = [
          name='api-docs',
     ),
     path('api/venue/', include('venue.urls')),
+    path('api/client/', include('client.urls')),
 ]
 
 if settings.DEBUG:
