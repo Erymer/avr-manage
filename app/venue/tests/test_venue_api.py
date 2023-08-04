@@ -14,9 +14,6 @@ from venue.serializers import VenueSerializer
 
 VENUES_URL = reverse('venue:venue-list')
 
-# Esta helper function es porque tenemos que pasar el recipe ID a la URL. Cada
-# detail será diferente, va a tener un UID para la recipe que queremos probar 
-# Por eso creamos una función en ves de hacer hardcode
 def detail_url(venue_id):
     """Create and return a venue detail URL"""
     return reverse('venue:venue-detail', args=[venue_id])

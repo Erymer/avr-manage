@@ -15,6 +15,7 @@ urlpatterns = [
     ),
     path('api/venue/', include('venue.urls')),
     path('api/client/', include('client.urls')),
+    path('api/inventory/', include('inventory.urls')),
 ]
 
 if settings.DEBUG:

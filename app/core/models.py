@@ -13,6 +13,7 @@ ROLE_CHOICES = (
     ('tech', 'Técnico'),
     ('admin', 'Administrativo'),
     ('finance', 'Finanzas'),
+    ('inventory', 'Inventario'),
 )
 
 
