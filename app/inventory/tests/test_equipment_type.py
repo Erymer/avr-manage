@@ -40,6 +40,11 @@ class PrivateEquipmentTypeAPITests(PrivateAPITests, TestCase):
         self.createModelData(payload, role="inventory")
 
 
+    def test_create_type_that_already_exists(self):
+        '''Test creating a type that already exists'''
+        self.createModelDataThatAlreadyExists('inventory')
+
+
     def test_create_equipment_type_without_permissions(self):
         '''Test user creating an equipment type without permissions.'''
         payload = {
@@ -58,7 +63,7 @@ class PrivateEquipmentTypeAPITests(PrivateAPITests, TestCase):
         self.fullModelDataUpdate(payload, role="inventory")
 
 
-    def test_delete_client(self):
+    def test_delete_equipment_type(self):
         '''
         Test delete equipment type successful
         '''

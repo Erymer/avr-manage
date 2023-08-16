@@ -1,5 +1,5 @@
 """
-URL mappings for equipment app.
+URL mappings for inventory app.
 """
 
 from django.urls import (
@@ -12,9 +12,9 @@ from inventory import views
  
 router = DefaultRouter()
 router.register('equipment_type', views.EquipmentTypeViewSet)
-# router.register('equipment', views.EquipmentViewSet)
-# router.register('equipment-model', views.EquipmentModelViewSet)
-# router.register('equipment-brand', views.EquipmentBrandViewSet)
+router.register('equipment_model', views.EquipmentModelViewSet)
+router.register('equipment_brand', views.EquipmentBrandViewSet)
+router.register('equipment', views.EquipmentViewSet)
 
 app_name = 'inventory'
 

@@ -78,6 +78,6 @@ class PrivateVenueAPITests(PrivateAPITests, TestCase):
 
     def test_delete_venue(self):
         '''
-        Test delete venue successful
+       Test delete venue successful
         '''
         self.deleteModelData(role="sales")

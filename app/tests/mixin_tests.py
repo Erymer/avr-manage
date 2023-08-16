@@ -117,8 +117,8 @@ class PrivateAPITests(TestCase):
         """
         Helper function to create sample model data directly into the data base
         without using the API. Bypasses authentication.
-        The data is defined in `default_model_data` when creating the Test
-        Class.
+        By default the data is defined in `default_model_data` when creating
+        the Test Class.
 
         Parameters
         ----------
@@ -173,6 +173,71 @@ class PrivateAPITests(TestCase):
             raise ValueError("Unavailable role")
 
 
+    def _http_request(self, request_type, role, payload=None, url=None):
+        '''
+        Helper function to create a http requests as a specific user type
+        Parameters
+        ----------
+        request_type : str
+            HTTP request type. Possible values are: "post", "get", "put",
+            "patch", "delete".
+        role : str
+            Employee role that will be used for the authentication in the test.
+            Available roles are: tech, sales, finance, admin, inventory
+        payload : dict
+            Payload for the request
+        url : str
+            Url for the request
+
+        Raises
+        ------
+        ValueError
+            If http request type doesn't exists
+        '''
+        if url is None:
+            url = self.data_url
+            url=reverse(url)
+
+        employee_role = self._rol_selection(role)
+        self.client.force_authenticate(employee_role)
+
+        if request_type.lower() == 'post':
+            res = self.client.post(
+                    url, 
+                    payload, 
+                    format='json'
+            )
+
+        elif request_type.lower() == 'get':
+            res = self.client.get(
+                url, 
+            )
+
+        elif request_type.lower() == 'delete':
+            res = self.client.delete(
+                url, 
+            )
+
+        elif request_type.lower() == 'put':
+            res = self.client.put(
+                url, 
+                payload, 
+                format='json'
+            )
+
+        elif request_type.lower() == 'patch':
+            res = self.client.patch(
+                url, 
+                payload, 
+                format='json'
+            )
+
+        else:
+            raise ValueError(f"{request_type} is an invalid HTTP method")
+
+        return res
+
+
     def retrieveModelData(self, role):
         """
         Test retrieving model data.
@@ -196,8 +261,8 @@ class PrivateAPITests(TestCase):
 
         res = self.client.get(reverse(self.data_url))
 
-        foo = self.model_class.objects.all().order_by('-id')
-        serializer = self.serializer(foo, many=True)
+        data = self.model_class.objects.all().order_by('-id')
+        serializer = self.serializer(data, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
 
@@ -227,10 +292,10 @@ class PrivateAPITests(TestCase):
         res = self.client.post(reverse(self.data_url), payload)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        client = self.model_class.objects.get(id=res.data['id'])
+        data = self.model_class.objects.get(id=res.data['id'])
 
         for k, v in payload.items():
-            self.assertEqual(getattr(client, k), v)
+            self.assertEqual(getattr(data, k), v)
 
 
     def createModelDataWithoutPermissions(self, payload, role):
@@ -259,7 +324,38 @@ class PrivateAPITests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
+    def createModelDataThatAlreadyExists(self, role):
+        """
+        Test trying to create a new instance with the same data as a previously
+        created instance. This test is for models that has one or more fields
+        with 'unique=True' parameter.
+
+        Parameters
+        ----------
+        role : str
+            Employee role that will be used for the authentication in the test.
+            Available roles are: tech, sales, finance, admin, inventory
+
+        Raises
+        ------
+        AssertionError
+            If response status code doesn't corresponds to HTTP 400 BAD REQUEST
+            or if exists more than one instance with the same data
+        """
+        self._create_data()
+        payload = self.default_model_data
+
+        employee_role = self._rol_selection(role)
+        self.client.force_authenticate(employee_role)
+        res = self.client.post(reverse(self.data_url), payload)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        count = self.model_class.objects.filter(**payload).count()
+        self.assertEqual(count, 1)
+
+
     def partialModelDataUpdate(self, original_data_field, payload, role):
+        # TODO: Create exception if 'payload' contains 'original_data_field' 
         """
         Test partial update of a model data
 

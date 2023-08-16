@@ -114,7 +114,7 @@ class Client(models.Model):
 
 class EquipmentModel(models.Model):
     """Model of equipment"""
-    name = models.CharField(max_length=50, null=False)
+    name = models.CharField(unique=True, max_length=50, null=False)
 
     def __str__(self):
         return self.name
@@ -122,7 +122,7 @@ class EquipmentModel(models.Model):
 
 class EquipmentBrand(models.Model):
     """Brand of the equipment"""
-    name = models.CharField(max_length=50, null=False)
+    name = models.CharField(unique=True, max_length=50, null=False)
 
     def __str__(self):
         return self.name
@@ -130,7 +130,7 @@ class EquipmentBrand(models.Model):
 
 class EquipmentType(models.Model):
     """Type of equipment (microphone, speaker etc.)"""
-    name = models.CharField(max_length=50, null=False)
+    name = models.CharField(unique=True, max_length=50, null=False)
 
     def __str__(self):
         return self.name

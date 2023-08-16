@@ -11,7 +11,7 @@ from rest_framework.permissions import BasePermission
 # - 'finance'
 # - 'inventory'
 
-class EquipmentTypePermissions(BasePermission):
+class InventoryPermissions(BasePermission):
     def has_permission(self, request, view):
         if request.method in ['GET']:
             return request.user.is_authenticated
