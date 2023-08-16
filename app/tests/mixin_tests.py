@@ -255,12 +255,7 @@ class PrivateAPITests(TestCase):
             the data in the default_model_data attribute
         """
         self._create_data()
-
-        employee_role = self._rol_selection(role)
-        self.client.force_authenticate(employee_role)
-
-        res = self.client.get(reverse(self.data_url))
-
+        res = self._http_request('get', role)
         data = self.model_class.objects.all().order_by('-id')
         serializer = self.serializer(data, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -286,11 +281,7 @@ class PrivateAPITests(TestCase):
             If data was not successfully created or if the data in the database
             differs from the data given in the payload.
         """
-        employee_role = self._rol_selection(role)
-        self.client.force_authenticate(employee_role)
-
-        res = self.client.post(reverse(self.data_url), payload)
-
+        res = self._http_request('post', role, payload)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         data = self.model_class.objects.get(id=res.data['id'])
 
@@ -316,11 +307,7 @@ class PrivateAPITests(TestCase):
         AssertionError
             If response status code doesn't corresponds to HTTP 403 Forbidden
         """
-        employee_role = self._rol_selection(role)
-        self.client.force_authenticate(employee_role)
-
-        res = self.client.post(reverse(self.data_url), payload)
-
+        res = self._http_request('post', role, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
 
@@ -344,11 +331,7 @@ class PrivateAPITests(TestCase):
         """
         self._create_data()
         payload = self.default_model_data
-
-        employee_role = self._rol_selection(role)
-        self.client.force_authenticate(employee_role)
-        res = self.client.post(reverse(self.data_url), payload)
-
+        res = self._http_request('post', role, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         count = self.model_class.objects.filter(**payload).count()
         self.assertEqual(count, 1)
@@ -381,19 +364,12 @@ class PrivateAPITests(TestCase):
             differs from the data given in the payload or if the data in the
             field defined in `original_data_field` changed during the test.
         """
-        employee_role = self._rol_selection(role)
-        self.client.force_authenticate(employee_role)
 
         original_data = self.default_model_data[original_data_field]
-
         data = self._create_data()
-
         url = self._detail_url(data.id)
-
-        res = self.client.patch(url, payload)
-
+        res = self._http_request('patch', role, payload, url)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-
         data.refresh_from_db()
 
         for k, v in payload.items():
@@ -421,17 +397,13 @@ class PrivateAPITests(TestCase):
             If data was not successfully created, or if data in the data base
             differs from the data given in the payload.
         """
-        employee_role = self._rol_selection(role)
-        self.client.force_authenticate(employee_role)
 
         data = self._create_data()
-
         url = self._detail_url(data.id)
-
-        res = self.client.put(url, payload)
-
+        res = self._http_request('put', role, payload, url)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         data.refresh_from_db()
+
         for k, v in payload.items():
             self.assertEqual(getattr(data, k), v)
 
@@ -452,13 +424,9 @@ class PrivateAPITests(TestCase):
             If data response status code is not HTTP 204 NO CONTENT or if data
             still exists in the data base.
         """
-        employee_role = self._rol_selection(role)
-        self.client.force_authenticate(employee_role)
 
         data = self._create_data()
-        
         url = self._detail_url(data.id)
-        res = self.client.delete(url)
-
+        res = self._http_request('delete', role, url=url)
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(Client.objects.filter(id=data.id).exists())
+        self.assertFalse(self.model_class.objects.filter(id=data.id).exists())
