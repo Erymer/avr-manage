@@ -11,11 +11,6 @@ from tests.mixin_tests import PublicAPITests, PrivateAPITests
 
 from rest_framework import status
 
-def create_user(**params):
-    '''
-    Create and return a new user.
-    '''
-    return get_user_model().objects.create_user(**params)
 
 class PublicEquipmentAPITests(PublicAPITests, TestCase):
     data_url = 'inventory:equipment-list'
@@ -24,7 +19,6 @@ class PublicEquipmentAPITests(PublicAPITests, TestCase):
         self.authRequired()
 
 
-# PRIVATE TESTS
 class PrivateEquipmentAPITests(PrivateAPITests, TestCase):
     """
     Test authenticated API requests
@@ -36,8 +30,8 @@ class PrivateEquipmentAPITests(PrivateAPITests, TestCase):
 
     def setUp(self):
         super().setUp()
-        self.equipment_model = EquipmentModel.objects.create(name="EMX500")
-        self.equipment_brand = EquipmentBrand.objects.create(name="Yamaha")
+        self.equipment_model = EquipmentModel.objects.create(name="emx500")
+        self.equipment_brand = EquipmentBrand.objects.create(name="yamaha")
         self.equipment_type = EquipmentType.objects.create(name="console")
         self.default_model_data = {
             'model': self.equipment_model,
@@ -46,7 +40,6 @@ class PrivateEquipmentAPITests(PrivateAPITests, TestCase):
             'number': 1,
             'serial_number': 'ABC123',
         }
-
 
 
     def test_retrieve_equipment_instace(self):
@@ -367,14 +360,9 @@ class PrivateEquipmentAPITests(PrivateAPITests, TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-    def test_deleteModelData(self):
+    def test_delete_equipment(self):
         """
-        Test deleting model data successfully.
+        Test deleting equipment instance successfully.
         """
 
-        data = self._create_data()
-        url = self._detail_url(data.id)
-        res = self._http_request('delete', 'inventory', url=url)
-
-        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(self.model_class.objects.filter(id=data.id).exists())
+        self.deleteModelData('inventory')
