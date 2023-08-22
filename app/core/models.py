@@ -102,9 +102,10 @@ class Venue(models.Model):
         return self.name
 
 
-class Client(models.Model):
+class Customer(models.Model):
     """Client of the company"""
     name = models.CharField(max_length=50, null=False)
+    company = models.CharField(max_length=50, null=True)
     phone = models.CharField(max_length=10, null=True)
     email = models.EmailField(null=True)
 
@@ -167,7 +168,7 @@ class Event(models.Model):
     end_date = models.DateTimeField()
     venue = models.ForeignKey(Venue, on_delete=models.SET_NULL, null=True)
     equipment = models.ManyToManyField(Equipment)
-    client = models.ForeignKey(Client, on_delete=models.PROTECT)
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
     crew = models.ManyToManyField(Employee, related_name="event_crew")
     leader = models.ForeignKey(Employee, on_delete=models.SET_NULL, related_name="event_leader", null=True)
     comment = models.TextField()
