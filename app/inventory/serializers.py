@@ -9,7 +9,6 @@ from core.models import (
     EquipmentModel,
     Equipment
 )
-from rest_framework.exceptions import ValidationError
 
 class EquipmentTypeSerializer(serializers.ModelSerializer):
     """Serializer for Equipment Type."""
@@ -68,7 +67,6 @@ class EquipmentSerializer(serializers.ModelSerializer):
         model = Equipment
         fields = '__all__'
         read_only_fields = ['id', 'uid']
-
 
     def create(self, validated_data):
         model_data = validated_data.pop('model')

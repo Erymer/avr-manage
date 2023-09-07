@@ -46,7 +46,7 @@ class PrivateEquipmentBrandAPITests(PrivateAPITests, TestCase):
 
     def test_creating_brand_that_already_exists(self):
         '''Test trying to create a new brand with the same name'''
-        self.createModelDataThatAlreadyExists("inventory")
+        self.createModelDataThatAlreadyExists('inventory')
 
 
     def test_create_equipment_brand_without_permissions(self):

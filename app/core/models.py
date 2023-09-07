@@ -105,9 +105,9 @@ class Venue(models.Model):
 class Customer(models.Model):
     """Client of the company"""
     name = models.CharField(max_length=50, null=False)
-    company = models.CharField(max_length=50, null=True)
     phone = models.CharField(max_length=10, null=True)
     email = models.EmailField(null=True)
+    company = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return self.name
