@@ -4,12 +4,12 @@ Test for venue APIs.
 from django.test import TestCase
 from tests.mixin_tests import PublicAPITests, PrivateAPITests
 
-from core.models import Client
-from client.serializers import ClientSerializer
+from core.models import Customer
+from customer.serializers import CustomerSerializer
 
 
-class PublicClientAPITests(PublicAPITests, TestCase):
-    data_url = 'client:client-list'
+class PublicCustomerAPITests(PublicAPITests, TestCase):
+    data_url = 'customer:customer-list'
     def test_auth_required(self):
         '''Test auth is required to call API'''
         self.authRequired()
@@ -17,38 +17,41 @@ class PublicClientAPITests(PublicAPITests, TestCase):
 
 class PrivateVenueAPITests(PrivateAPITests, TestCase):
     """Test authenticated API requests"""
-    model_class = Client
-    data_url = 'client:client-list'
-    data_detail_url = 'client:client-detail'
-    serializer = ClientSerializer
+    model_class = Customer
+    data_url = 'customer:customer-list'
+    data_detail_url = 'customer:customer-detail'
+    serializer = CustomerSerializer
     default_model_data = {
         'name': 'Legolas Greenleaf',
         'phone': '5645651356',
         'email': 'legolas@example.com',
+        'company': 'Foo Inc.',
     }
 
 
-    def test_retrieve_client(self):
-        '''Test retrieving clients'''
+    def test_retrieve_customer(self):
+        '''Test retrieving customers'''
         self.retrieveModelData(role="tech")
 
 
-    def test_create_client(self):
-        '''Test creating a client'''
+    def test_create_customer(self):
+        '''Test creating a customer'''
         payload = {
             'name': 'Aragorn Elessar',
             'phone': '3345265845',
             'email': 'aragorn@example.com',
+            'company': 'Barr Corp',
         }
         self.createModelData(payload, role="sales")
 
 
-    def test_create_client_without_permissions(self):
-        '''Test user creating a client without permissions.'''
+    def test_create_customer_without_permissions(self):
+        '''Test user creating a customer without permissions.'''
         payload = {
             'name': 'Faramir Denethor',
             'phone': '7745645315',
             'email': 'faramir@example.com',
+            'company': 'Lorem',
         }
         self.createModelDataWithoutPermissions(payload, role="tech")
 
@@ -59,18 +62,13 @@ class PrivateVenueAPITests(PrivateAPITests, TestCase):
             'name': "Boromir Denethor",
             'phone': "6645132568",
             'email': "boromir@example.com",
+            'company': 'Ipsum SA',
         }
         self.fullModelDataUpdate(payload, role="sales")
 
-        payload = {
-            'name': 'Gimli Gloinson',
-            'phone': '4456125865',
-            'email': 'gimli@example.com',
-        }
-
 
     def test_partial_update(self):
-        '''Test partial client update'''
+        '''Test partial customer update'''
         payload = {
             'phone': "4456728595",
         }
@@ -78,8 +76,8 @@ class PrivateVenueAPITests(PrivateAPITests, TestCase):
         self.partialModelDataUpdate(original_data, payload=payload, role="sales")
 
 
-    def test_delete_client(self):
+    def test_delete_customer(self):
         '''
-        Test delete client successful
+        Test delete customer successful
         '''
         self.deleteModelData(role="sales")

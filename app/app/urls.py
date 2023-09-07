@@ -14,8 +14,9 @@ urlpatterns = [
          name='api-docs',
     ),
     path('api/venue/', include('venue.urls')),
-    path('api/client/', include('client.urls')),
+    path('api/customer/', include('customer.urls')),
     path('api/inventory/', include('inventory.urls')),
+    path('api/event/', include('event.urls')),
 ]
 
 if settings.DEBUG:

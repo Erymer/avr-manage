@@ -10,7 +10,7 @@ from rest_framework.permissions import BasePermission
 # - 'admin'
 # - 'finance'
 
-class ClientPermissions(BasePermission):
+class CustomerPermissions(BasePermission):
     def has_permission(self, request, view):
         if request.method in ['GET']:
             return request.user.is_authenticated

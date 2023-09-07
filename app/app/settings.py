@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'inventory',
     'venue',
-    'client',
+    'customer',
+    'event',
 ]
 
 MIDDLEWARE = [

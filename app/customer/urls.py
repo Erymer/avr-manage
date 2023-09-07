@@ -8,13 +8,13 @@ from django.urls import (
 )
 
 from rest_framework.routers import DefaultRouter
-from client import views
+from customer import views
 
  
 router = DefaultRouter()
-router.register('clients', views.ClientViewSet)
+router.register('customers', views.CustomerViewSet)
 
-app_name = 'client'
+app_name = 'customer'
 
 urlpatterns = [
     path('', include(router.urls)),

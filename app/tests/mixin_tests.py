@@ -8,8 +8,6 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from core.models import Client
-
 
 def create_user(**params):
     '''
@@ -148,6 +146,7 @@ class PrivateAPITests(TestCase):
     def _rol_selection(self, role):
         """
         Helper function to select employee type to be authenticated
+
         Parameters
         ----------
         role : String

@@ -1,4 +1,3 @@
-
 """
 Test for Models
 """
@@ -136,13 +135,14 @@ class ModelTest(TestCase):
     # TODO: More unit test for validations:
     def test_create_client(self):
         """Test creating a client is sucessful"""
-        client = models.Client.objects.create(
+        client = models.Customer.objects.create(
             name="John Doe",
             phone="1234567890",
             email="john@example.com",
+            company="Foo Inc.",
         )
 
-        saved_client = models.Client.objects.get(id=client.id)
+        saved_client = models.Customer.objects.get(id=client.id)
 
         self.assertEqual(client, saved_client)
 
@@ -277,10 +277,11 @@ class ModelTest(TestCase):
             number=2,
         )
 
-        client = models.Client.objects.create(
+        customer = models.Customer.objects.create(
             name="John Doe",
             phone="1234567890",
             email="john@example.com",
+            company="Foo Barr Co."
         )
 
 
@@ -294,7 +295,7 @@ class ModelTest(TestCase):
             start_date = timezone.make_aware(datetime(2023, 7, 18, 13, 0)),
             end_date = timezone.make_aware(datetime(2023, 7, 18, 13, 0)),
             venue = venue,
-            client = client,
+            customer = customer,
             leader = user_one,
             comment = "This is just a random comment."
         )
